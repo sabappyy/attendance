@@ -49,6 +49,11 @@ localStorage.setItem(
 result.name
 );
 
+localStorage.setItem(
+'employeePassword',
+password
+);
+
 window.location.href =
 'dashboard.html';
 
