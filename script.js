@@ -1,4 +1,4 @@
-const scriptURL = 'PASTE_SCRIPT_URL';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyjqWs5kZk_83AKaGl8YXWdvSrTCnVP2L7ykjjJXuj_9iajZsVqD9Y7ADo-kpUCOozZ/exec';
 
 async function login(){
 
