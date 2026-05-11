@@ -7,68 +7,7 @@
 
 <title>Maze Attendance</title>
 
-<style>
-
-body{
-font-family:Arial;
-background:#d8ebe5;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
-
-.box{
-
-background:white;
-padding:40px;
-border-radius:20px;
-width:320px;
-text-align:center;
-box-shadow:0 0 20px rgba(0,0,0,0.1);
-
-}
-
-input{
-
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-background:#d8ebe5;
-
-}
-
-button{
-
-width:100%;
-padding:12px;
-margin-top:15px;
-border:none;
-border-radius:10px;
-background:#2d6d5c;
-color:white;
-font-size:16px;
-cursor:pointer;
-
-}
-
-.logout{
-
-background:#9b3c3c;
-
-}
-
-#status{
-
-margin-top:20px;
-font-weight:bold;
-
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -76,78 +15,23 @@ font-weight:bold;
 
 <div class="box">
 
+<img src="logo.png" class="logo">
+
 <h2>Maze Corporation</h2>
 
 <input type="text" id="employeeId" placeholder="Employee ID">
 
 <input type="password" id="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
-
-<button class="logout" onclick="logout()">Logout</button>
+<button id="loginBtn" onclick="login()">
+Login
+</button>
 
 <div id="status"></div>
 
 </div>
 
-<script>
-
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyjqWs5kZk_83AKaGl8YXWdvSrTCnVP2L7ykjjJXuj_9iajZsVqD9Y7ADo-kpUCOozZ/exec';
-
-async function sendData(action){
-
-const employeeId =
-document.getElementById('employeeId').value;
-
-const password =
-document.getElementById('password').value;
-
-const status =
-document.getElementById('status');
-
-const data = {
-
-action,
-employeeId,
-password
-
-};
-
-try{
-
-const response = await fetch(scriptURL,{
-
-method:'POST',
-body:JSON.stringify(data)
-
-});
-
-const result = await response.json();
-
-status.innerHTML = result.message;
-
-}
-catch(error){
-
-status.innerHTML = 'Connection Error';
-
-}
-
-}
-
-function login(){
-
-sendData('login');
-
-}
-
-function logout(){
-
-sendData('logout');
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
