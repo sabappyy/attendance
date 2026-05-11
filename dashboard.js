@@ -68,7 +68,9 @@ body:JSON.stringify({
 
 action:'logout',
 employeeId,
-password:''
+password:localStorage.getItem(
+'employeePassword'
+)
 
 })
 
