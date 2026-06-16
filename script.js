@@ -1,4 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyjqWs5kZk_83AKaGl8YXWdvSrTCnVP2L7ykjjJXuj_9iajZsVqD9Y7ADo-kpUCOozZ/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
 
 async function login(){
 
