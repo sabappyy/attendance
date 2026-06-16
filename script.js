@@ -1,78 +1,92 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
+const scriptURL =
+'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
 
 async function login(){
 
-const employeeId =
-document.getElementById('employeeId').value;
+    const employeeId =
+    document.getElementById('employeeId').value.trim();
 
-const password =
-document.getElementById('password').value;
+    const password =
+    document.getElementById('password').value.trim();
 
-const status =
-document.getElementById('status');
+    const status =
+    document.getElementById('status');
 
-const loginBtn =
-document.getElementById('loginBtn');
+    const loginBtn =
+    document.getElementById('loginBtn');
 
-loginBtn.disabled = true;
+    if(!employeeId || !password){
+        status.innerHTML =
+        'Please enter Employee ID and Password';
+        return;
+    }
 
-const data = {
+    loginBtn.disabled = true;
+    status.innerHTML = 'Checking...';
 
-action:'login',
-employeeId,
-password
+    const data = {
+        action:'login',
+        employeeId,
+        password
+    };
 
-};
+    try{
 
-try{
+        const response = await fetch(scriptURL,{
+            method:'POST',
+            body:JSON.stringify(data)
+        });
 
-const response = await fetch(scriptURL,{
+        const result =
+        await response.json();
 
-method:'POST',
-body:JSON.stringify(data)
+        status.innerHTML =
+        result.message || '';
 
-});
+        /*
+        success = first login today
+        already_logged_in = login exists,
+                            logout not done yet
+        */
 
-const result = await response.json();
+        if(
+            result.status === 'success' ||
+            result.status === 'already_logged_in'
+        ){
 
-status.innerHTML = result.message;
+            localStorage.setItem(
+                'employeeId',
+                employeeId
+            );
 
-if(result.status === 'success'){
+            localStorage.setItem(
+                'employeeName',
+                result.name
+            );
 
-localStorage.setItem(
-'employeeId',
-employeeId
-);
+            localStorage.setItem(
+                'employeePassword',
+                password
+            );
 
-localStorage.setItem(
-'employeeName',
-result.name
-);
+            window.location.href =
+            'dashboard.html';
 
-localStorage.setItem(
-'employeePassword',
-password
-);
+        }else{
 
-window.location.href =
-'dashboard.html';
+            loginBtn.disabled = false;
 
-}
+        }
 
-else{
+    }catch(error){
 
-loginBtn.disabled = false;
+        console.error(error);
 
-}
+        status.innerHTML =
+        'Connection Error';
 
-}
+        loginBtn.disabled = false;
 
-catch(error){
-
-status.innerHTML = 'Connection Error';
-
-loginBtn.disabled = false;
-
-}
+    }
 
 }
