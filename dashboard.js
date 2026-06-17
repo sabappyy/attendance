@@ -1,4 +1,5 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
+const scriptURL =
+'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
 
 const employeeId =
 localStorage.getItem('employeeId');
@@ -11,13 +12,13 @@ document.getElementById('name')
 
 function updateClock(){
 
-const now = new Date();
+    const now = new Date();
 
-document.getElementById('date')
-.innerHTML = now.toDateString();
+    document.getElementById('date')
+    .innerHTML = now.toDateString();
 
-document.getElementById('clock')
-.innerHTML = now.toLocaleTimeString();
+    document.getElementById('clock')
+    .innerHTML = now.toLocaleTimeString();
 
 }
 
@@ -25,34 +26,73 @@ setInterval(updateClock,1000);
 
 updateClock();
 
+function formatDate(dateString){
+
+    const parts = dateString.split('-');
+
+    if(parts.length !== 3)
+        return dateString;
+
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+    ];
+
+    return `${parts[0]} ${months[parseInt(parts[1])-1]} ${parts[2]}`;
+
+}
+
 async function loadAttendance(){
 
-const response = await fetch(
-`${scriptURL}?employeeId=${employeeId}`
-);
+    try{
 
-const data = await response.json();
+        const response =
+        await fetch(
+        `${scriptURL}?employeeId=${employeeId}`
+        );
 
-const body =
-document.getElementById('attendanceBody');
+        const data =
+        await response.json();
 
-body.innerHTML = '';
+        const body =
+        document.getElementById(
+        'attendanceBody'
+        );
 
-data.forEach(item => {
+        body.innerHTML = '';
 
-body.innerHTML += `
+        data.forEach(item => {
 
-<tr>
+            body.innerHTML += `
 
-<td>${item.date}</td>
-<td>${item.login}</td>
-<td>${item.logout}</td>
+            <tr>
 
-</tr>
+                <td>${formatDate(item.date)}</td>
+                <td>${item.login}</td>
+                <td>${item.logout}</td>
 
-`;
+            </tr>
 
-});
+            `;
+
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
 
 }
 
@@ -60,26 +100,32 @@ loadAttendance();
 
 async function logout(){
 
-const response = await fetch(scriptURL,{
+    const response =
+    await fetch(scriptURL,{
 
-method:'POST',
+        method:'POST',
 
-body:JSON.stringify({
+        body:JSON.stringify({
 
-action:'logout',
-employeeId,
-password:localStorage.getItem(
-'employeePassword'
-)
+            action:'logout',
+            employeeId,
+            password:
+            localStorage.getItem(
+            'employeePassword'
+            )
 
-})
+        })
 
-});
+    });
 
-const result = await response.json();
+    const result =
+    await response.json();
 
-alert(result.message);
+    alert(result.message);
 
-window.location.href = 'index.html';
+    localStorage.clear();
+
+    window.location.href =
+    'index.html';
 
 }
