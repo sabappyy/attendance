@@ -1,131 +1,51 @@
-const scriptURL =
-'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
+<!DOCTYPE html>
+<html>
 
-const employeeId =
-localStorage.getItem('employeeId');
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const employeeName =
-localStorage.getItem('employeeName');
+    <title>Dashboard</title>
 
-document.getElementById('name')
-.innerHTML = employeeName;
+    <link rel="stylesheet" href="style.css">
+</head>
 
-function updateClock(){
+<body>
 
-    const now = new Date();
+    <div class="box">
 
-    document.getElementById('date')
-    .innerHTML = now.toDateString();
+        <img src="logo.png" class="logo">
 
-    document.getElementById('clock')
-    .innerHTML = now.toLocaleTimeString();
+        <h2 id="name"></h2>
 
-}
+        <h3 id="date"></h3>
 
-setInterval(updateClock,1000);
+        <h1 id="clock"></h1>
 
-updateClock();
+        <button onclick="logout()">
+            Logout
+        </button>
 
-function formatDate(dateString){
+        <table class="table">
 
-    const parts = dateString.split('-');
+            <thead>
 
-    if(parts.length !== 3)
-        return dateString;
+                <tr>
+                    <th>Date</th>
+                    <th>Login</th>
+                    <th>Logout</th>
+                </tr>
 
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-    ];
+            </thead>
 
-    return `${parts[0]} ${months[parseInt(parts[1])-1]} ${parts[2]}`;
+            <tbody id="attendanceBody"></tbody>
 
-}
+        </table>
 
-async function loadAttendance(){
+    </div>
 
-    try{
+    <script src="dashboard.js"></script>
 
-        const response =
-        await fetch(
-        `${scriptURL}?employeeId=${employeeId}`
-        );
+</body>
 
-        const data =
-        await response.json();
-
-        const body =
-        document.getElementById(
-        'attendanceBody'
-        );
-
-        body.innerHTML = '';
-
-        data.forEach(item => {
-
-            body.innerHTML += `
-
-            <tr>
-
-                <td>${formatDate(item.date)}</td>
-                <td>${item.login}</td>
-                <td>${item.logout}</td>
-
-            </tr>
-
-            `;
-
-        });
-
-    }
-    catch(error){
-
-        console.error(error);
-
-    }
-
-}
-
-loadAttendance();
-
-async function logout(){
-
-    const response =
-    await fetch(scriptURL,{
-
-        method:'POST',
-
-        body:JSON.stringify({
-
-            action:'logout',
-            employeeId,
-            password:
-            localStorage.getItem(
-            'employeePassword'
-            )
-
-        })
-
-    });
-
-    const result =
-    await response.json();
-
-    alert(result.message);
-
-    localStorage.clear();
-
-    window.location.href =
-    'index.html';
-
-}
+</html>
