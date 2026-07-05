@@ -1,51 +1,105 @@
-<!DOCTYPE html>
-<html>
+const scriptURL =
+'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+const employeeId =
+localStorage.getItem('employeeId');
 
-    <title>Dashboard</title>
+const employeeName =
+localStorage.getItem('employeeName');
 
-    <link rel="stylesheet" href="style.css">
-</head>
+document.getElementById('name').innerHTML =
+employeeName;
 
-<body>
 
-    <div class="box">
+// ---------------- CLOCK ----------------
 
-        <img src="logo.png" class="logo">
+function updateClock(){
 
-        <h2 id="name"></h2>
+    const now = new Date();
 
-        <h3 id="date"></h3>
+    document.getElementById('date').innerHTML =
+    now.toDateString();
 
-        <h1 id="clock"></h1>
+    document.getElementById('clock').innerHTML =
+    now.toLocaleTimeString();
 
-        <button onclick="logout()">
-            Logout
-        </button>
+}
 
-        <table class="table">
+setInterval(updateClock,1000);
 
-            <thead>
+updateClock();
 
+
+// ---------------- ATTENDANCE ----------------
+
+async function loadAttendance(){
+
+    try{
+
+        const response =
+        await fetch(`${scriptURL}?employeeId=${employeeId}`);
+
+        const data =
+        await response.json();
+
+        const body =
+        document.getElementById("attendanceBody");
+
+        body.innerHTML = "";
+
+        data.forEach(item=>{
+
+            body.innerHTML += `
                 <tr>
-                    <th>Date</th>
-                    <th>Login</th>
-                    <th>Logout</th>
+                    <td>${item.date}</td>
+                    <td>${item.login || ""}</td>
+                    <td>${item.logout || ""}</td>
                 </tr>
+            `;
 
-            </thead>
+        });
 
-            <tbody id="attendanceBody"></tbody>
+    }
+    catch(error){
 
-        </table>
+        console.error(error);
 
-    </div>
+    }
 
-    <script src="dashboard.js"></script>
+}
 
-</body>
+loadAttendance();
 
-</html>
+
+// ---------------- LOGOUT ----------------
+
+async function logout(){
+
+    const response =
+    await fetch(scriptURL,{
+
+        method:"POST",
+
+        body:JSON.stringify({
+
+            action:"logout",
+
+            employeeId,
+
+            password:
+            localStorage.getItem("employeePassword")
+
+        })
+
+    });
+
+    const result =
+    await response.json();
+
+    alert(result.message);
+
+    localStorage.clear();
+
+    window.location.href="index.html";
+
+}
