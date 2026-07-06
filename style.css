@@ -1,276 +1,94 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
-}
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzPxvg3FdtRaF3XWaQaK5TZskLtRcDzhxVIRjyAvNHyDJ24NKGc0_F0aWZo4YIkaRKm/exec";
 
-body{
-    background:#eef3f8;
-    color:#222;
-}
+// =====================================================
+// LOGIN
+// =====================================================
 
-/* ================= LOGIN ================= */
+async function login() {
 
-.login-container{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
+    const employeeId = document
+        .getElementById("employeeId")
+        .value
+        .trim();
 
-.login-card{
-    width:100%;
-    max-width:420px;
-    background:#fff;
-    border-radius:18px;
-    padding:40px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
+    const password = document
+        .getElementById("password")
+        .value
+        .trim();
 
-.logo{
-    display:block;
-    margin:0 auto 20px;
-    width:120px;
-}
+    const status = document.getElementById("status");
+    const button = document.getElementById("loginBtn");
 
-h1{
-    text-align:center;
-    margin-bottom:10px;
-    color:#1d3557;
-}
+    status.innerHTML = "";
 
-.subtitle{
-    text-align:center;
-    color:#666;
-    margin-bottom:30px;
-}
-
-.input-group{
-    margin-bottom:20px;
-}
-
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:bold;
-}
-
-.input-group input{
-    width:100%;
-    height:48px;
-    padding:0 15px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    outline:none;
-}
-
-.input-group input:focus{
-    border-color:#0d6efd;
-}
-
-button{
-    border:none;
-    cursor:pointer;
-    transition:.3s;
-}
-
-#loginBtn{
-    width:100%;
-    height:50px;
-    background:#0d6efd;
-    color:#fff;
-    border-radius:10px;
-    font-size:16px;
-}
-
-#loginBtn:hover{
-    background:#0b5ed7;
-}
-
-.status{
-    margin-top:20px;
-    text-align:center;
-    color:#d00;
-    min-height:22px;
-}
-
-.version{
-    margin-top:25px;
-    text-align:center;
-    color:#888;
-}
-
-/* ================= DASHBOARD ================= */
-
-.dashboard-container{
-    width:100%;
-    padding:30px;
-}
-
-.dashboard-card{
-    max-width:1200px;
-    margin:auto;
-    background:#fff;
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-.top-bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.top-bar .logo{
-    width:90px;
-    margin:0;
-}
-
-.logout-btn{
-    background:#dc3545;
-    color:#fff;
-    padding:12px 25px;
-    border-radius:8px;
-}
-
-.logout-btn:hover{
-    background:#bb2d3b;
-}
-
-#employeeName{
-    text-align:center;
-    margin-top:10px;
-}
-
-#employeeInfo{
-    text-align:center;
-    color:#666;
-    margin-bottom:20px;
-}
-
-.clock{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.clock h3{
-    color:#666;
-}
-
-.clock h1{
-    font-size:42px;
-}
-
-.action-buttons{
-    display:flex;
-    gap:15px;
-    margin-bottom:30px;
-}
-
-.action-buttons button{
-    flex:1;
-    height:50px;
-    background:#0d6efd;
-    color:#fff;
-    border-radius:10px;
-    font-size:16px;
-}
-
-.action-buttons button:hover{
-    background:#0b5ed7;
-}
-
-.summary{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    gap:18px;
-    margin-bottom:35px;
-}
-
-.card{
-    background:#f8f9fb;
-    border-radius:12px;
-    padding:20px;
-    text-align:center;
-}
-
-.card span{
-    display:block;
-    color:#666;
-    margin-bottom:10px;
-}
-
-.card h3{
-    font-size:32px;
-    color:#1d3557;
-}
-
-.history-title{
-    margin-bottom:15px;
-}
-
-.table-wrapper{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-thead{
-    background:#0d6efd;
-    color:#fff;
-}
-
-th,
-td{
-    padding:14px;
-    text-align:center;
-    border-bottom:1px solid #ddd;
-}
-
-tbody tr:hover{
-    background:#f8f9fa;
-}
-
-@media(max-width:768px){
-
-    .dashboard-container{
-        padding:15px;
+    if (!employeeId) {
+        status.innerHTML = "Employee ID is required.";
+        return;
     }
 
-    .dashboard-card{
-        padding:20px;
+    if (!password) {
+        status.innerHTML = "Password is required.";
+        return;
     }
 
-    .top-bar{
-        flex-direction:column;
-        gap:15px;
-    }
+    button.disabled = true;
+    button.innerHTML = "Please Wait...";
 
-    .action-buttons{
-        flex-direction:column;
-    }
+    try {
 
-    .summary{
-        grid-template-columns:repeat(2,1fr);
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "login",
+                employeeId: employeeId,
+                password: password
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.status !== "success") {
+
+            status.innerHTML = result.message;
+
+            button.disabled = false;
+            button.innerHTML = "Login";
+
+            return;
+        }
+
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("employeeId", result.employee.id);
+        localStorage.setItem("employeeName", result.employee.name);
+        localStorage.setItem("employeeDepartment", result.employee.department);
+        localStorage.setItem("employeeDesignation", result.employee.designation);
+        localStorage.setItem("employeeRole", result.employee.role);
+
+        window.location.href = "dashboard.html";
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        status.innerHTML = "Unable to connect to server.";
+
+        button.disabled = false;
+        button.innerHTML = "Login";
+
     }
 
 }
 
-@media(max-width:500px){
+document
+.getElementById("password")
+.addEventListener("keydown", function (e) {
 
-    .summary{
-        grid-template-columns:1fr;
+    if (e.key === "Enter") {
+
+        login();
+
     }
 
-    .clock h1{
-        font-size:30px;
-    }
-
-}
+});
