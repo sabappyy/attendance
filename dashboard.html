@@ -5,170 +5,133 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Employee Dashboard</title>
+<title>Dashboard</title>
 
-<link
-rel="stylesheet"
-href="style.css">
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<div class="dashboard-container">
+<div class="dashboard">
 
-    <div class="dashboard-card">
+    <header class="topbar">
 
-        <div class="top-bar">
+        <div>
 
-            <img
-            src="logo.png"
-            class="logo">
+            <h2 id="employeeName">
+                Loading...
+            </h2>
 
-            <button
-            class="logout-btn"
-            onclick="logout()">
-
-                Logout
-
-            </button>
+            <p id="employeeInfo">
+                Loading...
+            </p>
 
         </div>
 
-        <h2 id="employeeName">
+        <button
+        id="logoutBtn">
+            Logout
+        </button>
 
-            Loading...
+    </header>
 
-        </h2>
+    <section class="clock">
 
-        <p id="employeeInfo">
+        <h3 id="todayDate"></h3>
 
-            ...
+        <h1 id="currentTime"></h1>
 
-        </p>
+    </section>
 
-        <div class="clock">
+    <section class="action-buttons">
 
-            <h3 id="currentDate"></h3>
+        <button
+        id="checkInBtn">
 
-            <h1 id="currentTime"></h1>
+            Check In
 
+        </button>
+
+        <button
+        id="checkOutBtn">
+
+            Check Out
+
+        </button>
+
+    </section>
+
+    <section class="cards">
+
+        <div class="card">
+            <h4>Present</h4>
+            <h2 id="present">0</h2>
         </div>
 
-        <div class="action-buttons">
-
-            <button
-            onclick="checkIn()">
-
-                Check In
-
-            </button>
-
-            <button
-            onclick="checkOut()">
-
-                Check Out
-
-            </button>
-
+        <div class="card">
+            <h4>Absent</h4>
+            <h2 id="absent">0</h2>
         </div>
 
-        <div class="summary">
-
-            <div class="card">
-
-                <span>Present</span>
-
-                <h3 id="present">0</h3>
-
-            </div>
-
-            <div class="card">
-
-                <span>Absent</span>
-
-                <h3 id="absent">0</h3>
-
-            </div>
-
-            <div class="card">
-
-                <span>Leave</span>
-
-                <h3 id="leave">0</h3>
-
-            </div>
-
-            <div class="card">
-
-                <span>Holiday</span>
-
-                <h3 id="holiday">0</h3>
-
-            </div>
-
-            <div class="card">
-
-                <span>Late</span>
-
-                <h3 id="late">0</h3>
-
-            </div>
-
-            <div class="card">
-
-                <span>Attendance</span>
-
-                <h3 id="attendance">0%</h3>
-
-            </div>
-
+        <div class="card">
+            <h4>Leave</h4>
+            <h2 id="leave">0</h2>
         </div>
 
-        <h3 class="history-title">
+        <div class="card">
+            <h4>Late</h4>
+            <h2 id="late">0</h2>
+        </div>
+
+        <div class="card">
+            <h4>Attendance</h4>
+            <h2 id="attendance">0%</h2>
+        </div>
+
+    </section>
+
+    <section class="history">
+
+        <h3>
 
             Recent Attendance
 
         </h3>
 
-        <div class="table-wrapper">
+        <table>
 
-            <table>
+            <thead>
 
-                <thead>
+                <tr>
 
-                    <tr>
+                    <th>Date</th>
 
-                        <th>Date</th>
+                    <th>Login</th>
 
-                        <th>Login</th>
+                    <th>Logout</th>
 
-                        <th>Logout</th>
+                    <th>Hours</th>
 
-                        <th>Hours</th>
+                    <th>Status</th>
 
-                        <th>Status</th>
+                </tr>
 
-                    </tr>
+            </thead>
 
-                </thead>
+            <tbody id="historyBody">
 
-                <tbody
-                id="historyBody">
+            </tbody>
 
-                </tbody>
+        </table>
 
-            </table>
-
-        </div>
-
-    </div>
+    </section>
 
 </div>
+
+<script src="config.js"></script>
 
 <script src="dashboard.js"></script>
 

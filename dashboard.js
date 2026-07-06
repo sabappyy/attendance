@@ -1,27 +1,54 @@
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzPxvg3FdtRaF3XWaQaK5TZskLtRcDzhxVIRjyAvNHyDJ24NKGc0_F0aWZo4YIkaRKm/exec";
+/*************************************************
+ * Maze Attendance System V4.0
+ * dashboard.js
+ *************************************************/
 
-const employeeId =
-localStorage.getItem("employeeId");
+if (!isLoggedIn()) {
 
-const token =
-localStorage.getItem("token");
-
-if(!employeeId || !token){
-
-    window.location.href="index.html";
+    window.location.href = "index.html";
 
 }
 
-// =====================================================
+const employeeId = getEmployeeId();
+const token = getToken();
+
+// ============================================
+// ELEMENTS
+// ============================================
+
+const employeeName =
+document.getElementById("employeeName");
+
+const employeeInfo =
+document.getElementById("employeeInfo");
+
+const present =
+document.getElementById("present");
+
+const absent =
+document.getElementById("absent");
+
+const leave =
+document.getElementById("leave");
+
+const late =
+document.getElementById("late");
+
+const attendance =
+document.getElementById("attendance");
+
+const historyBody =
+document.getElementById("historyBody");
+
+// ============================================
 // CLOCK
-// =====================================================
+// ============================================
 
 function updateClock(){
 
     const now = new Date();
 
-    document.getElementById("currentDate").innerHTML =
+    document.getElementById("todayDate").innerHTML =
     now.toDateString();
 
     document.getElementById("currentTime").innerHTML =
@@ -33,9 +60,9 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-// =====================================================
+// ============================================
 // LOAD DASHBOARD
-// =====================================================
+// ============================================
 
 async function loadDashboard(){
 
@@ -44,198 +71,187 @@ async function loadDashboard(){
         const response =
         await fetch(
 
-            `${SCRIPT_URL}?action=dashboard&employeeId=${employeeId}&token=${token}`
+            CONFIG.API_URL +
+            "?action=dashboard" +
+            "&employeeId=" +
+            encodeURIComponent(employeeId) +
+            "&token=" +
+            encodeURIComponent(token)
 
         );
 
-        const result =
+        const data =
         await response.json();
 
-        if(result.status!="success"){
+        if(data.status!=="success"){
 
-            alert(result.message);
+            alert(data.message);
 
-            logout();
+            clearSession();
+
+            window.location.href =
+            "index.html";
 
             return;
 
         }
 
-        document.getElementById("employeeName").innerHTML =
-        result.employee.name;
+        employeeName.innerHTML =
+        data.employee.name;
 
-        document.getElementById("employeeInfo").innerHTML =
-        `${result.employee.department} | ${result.employee.designation}`;
+        employeeInfo.innerHTML =
+        data.employee.department +
+        " | " +
+        data.employee.designation;
 
-        document.getElementById("present").innerHTML =
-        result.summary.present;
+        present.innerHTML =
+        data.summary.present;
 
-        document.getElementById("absent").innerHTML =
-        result.summary.absent;
+        absent.innerHTML =
+        data.summary.absent;
 
-        document.getElementById("leave").innerHTML =
-        result.summary.leave;
+        leave.innerHTML =
+        data.summary.leave;
 
-        document.getElementById("holiday").innerHTML =
-        result.summary.holiday;
+        late.innerHTML =
+        data.summary.late;
 
-        document.getElementById("late").innerHTML =
-        result.summary.late;
+        attendance.innerHTML =
+        data.summary.attendance + "%";
 
-        document.getElementById("attendance").innerHTML =
-        result.summary.attendance + "%";
+        historyBody.innerHTML = "";
 
-        loadHistory(result.history);
+        data.history.forEach(function(item){
+
+            historyBody.innerHTML += `
+
+            <tr>
+
+                <td>${item.date}</td>
+
+                <td>${item.login}</td>
+
+                <td>${item.logout}</td>
+
+                <td>${item.hours}</td>
+
+                <td>${item.status}</td>
+
+            </tr>
+
+            `;
+
+        });
 
     }
 
-    catch(error){
+    catch(err){
 
-        console.log(error);
+        console.error(err);
 
-        alert("Server Error");
+        alert("Unable to load dashboard.");
 
     }
 
 }
 
-function loadHistory(history){
-
-    const body =
-    document.getElementById("historyBody");
-
-    body.innerHTML="";
-
-    history.forEach(item=>{
-
-        body.innerHTML+=`
-
-        <tr>
-
-            <td>${item.date}</td>
-
-            <td>${item.login}</td>
-
-            <td>${item.logout}</td>
-
-            <td>${item.hours}</td>
-
-            <td>${item.status}</td>
-
-        </tr>
-
-        `;
-
-    });
-
-}
-
-// =====================================================
+// ============================================
 // CHECK IN
-// =====================================================
+// ============================================
 
 async function checkIn(){
 
-    const response =
-    await fetch(SCRIPT_URL,{
+    const result =
+    await api({
 
-        method:"POST",
+        action:"checkin",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+        employeeId:employeeId,
 
-        body:JSON.stringify({
-
-            action:"checkin",
-
-            employeeId,
-
-            token
-
-        })
+        token:token
 
     });
 
-    const result =
-    await response.json();
-
     alert(result.message);
 
-    loadDashboard();
+    if(result.status==="success"){
+
+        loadDashboard();
+
+    }
 
 }
 
-// =====================================================
+// ============================================
 // CHECK OUT
-// =====================================================
+// ============================================
 
 async function checkOut(){
 
-    const response =
-    await fetch(SCRIPT_URL,{
+    const result =
+    await api({
 
-        method:"POST",
+        action:"checkout",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+        employeeId:employeeId,
 
-        body:JSON.stringify({
-
-            action:"checkout",
-
-            employeeId,
-
-            token
-
-        })
+        token:token
 
     });
 
-    const result =
-    await response.json();
-
     alert(result.message);
 
-    loadDashboard();
+    if(result.status==="success"){
+
+        loadDashboard();
+
+    }
 
 }
 
-// =====================================================
+// ============================================
 // LOGOUT
-// =====================================================
+// ============================================
 
 async function logout(){
 
     try{
 
-        await fetch(SCRIPT_URL,{
+        await api({
 
-            method:"POST",
+            action:"logout",
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+            employeeId:employeeId,
 
-            body:JSON.stringify({
-
-                action:"logout",
-
-                employeeId,
-
-                token
-
-            })
+            token:token
 
         });
 
     }catch(e){}
 
-    localStorage.clear();
+    clearSession();
 
-    window.location.href="index.html";
+    window.location.href =
+    "index.html";
 
 }
+
+// ============================================
+// EVENTS
+// ============================================
+
+document
+.getElementById("checkInBtn")
+.addEventListener("click",checkIn);
+
+document
+.getElementById("checkOutBtn")
+.addEventListener("click",checkOut);
+
+document
+.getElementById("logoutBtn")
+.addEventListener("click",logout);
+
+// ============================================
 
 loadDashboard();

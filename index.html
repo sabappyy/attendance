@@ -19,14 +19,14 @@ href="style.css">
 
 <body>
 
-<div class="login-container">
+<div class="login-page">
 
     <div class="login-card">
 
         <img
         src="logo.png"
-        alt="Logo"
-        class="logo">
+        class="logo"
+        alt="Logo">
 
         <h1>
 
@@ -40,7 +40,7 @@ href="style.css">
 
         </p>
 
-        <div class="input-group">
+        <div class="form-group">
 
             <label>
 
@@ -50,11 +50,11 @@ href="style.css">
 
             <input
 
-                type="text"
-
                 id="employeeId"
 
-                placeholder="Enter Employee ID"
+                type="text"
+
+                placeholder="Employee ID"
 
                 autocomplete="username"
 
@@ -62,7 +62,7 @@ href="style.css">
 
         </div>
 
-        <div class="input-group">
+        <div class="form-group">
 
             <label>
 
@@ -72,11 +72,11 @@ href="style.css">
 
             <input
 
-                type="password"
-
                 id="password"
 
-                placeholder="Enter Password"
+                type="password"
+
+                placeholder="Password"
 
                 autocomplete="current-password"
 
@@ -85,28 +85,21 @@ href="style.css">
         </div>
 
         <button
-
-            id="loginBtn"
-
-            onclick="login()"
-
-        >
+        id="loginBtn">
 
             Login
 
         </button>
 
         <div
+        id="message"
+        class="message">
 
-            id="status"
-
-            class="status"
-
-        ></div>
+        </div>
 
         <div class="version">
 
-            Version 3.0
+            Version 4.0
 
         </div>
 
@@ -114,7 +107,9 @@ href="style.css">
 
 </div>
 
-<script src="script.js"></script>
+<script src="config.js"></script>
+
+<script src="login.js"></script>
 
 </body>
 
