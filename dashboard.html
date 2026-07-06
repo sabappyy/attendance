@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Employee Dashboard</title>
+
+<link
+rel="stylesheet"
+href="style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <div class="dashboard-card">
+
+        <div class="top-bar">
+
+            <img
+            src="logo.png"
+            class="logo">
+
+            <button
+            class="logout-btn"
+            onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+        <h2 id="employeeName">
+
+            Loading...
+
+        </h2>
+
+        <p id="employeeInfo">
+
+            ...
+
+        </p>
+
+        <div class="clock">
+
+            <h3 id="currentDate"></h3>
+
+            <h1 id="currentTime"></h1>
+
+        </div>
+
+        <div class="action-buttons">
+
+            <button
+            onclick="checkIn()">
+
+                Check In
+
+            </button>
+
+            <button
+            onclick="checkOut()">
+
+                Check Out
+
+            </button>
+
+        </div>
+
+        <div class="summary">
+
+            <div class="card">
+
+                <span>Present</span>
+
+                <h3 id="present">0</h3>
+
+            </div>
+
+            <div class="card">
+
+                <span>Absent</span>
+
+                <h3 id="absent">0</h3>
+
+            </div>
+
+            <div class="card">
+
+                <span>Leave</span>
+
+                <h3 id="leave">0</h3>
+
+            </div>
+
+            <div class="card">
+
+                <span>Holiday</span>
+
+                <h3 id="holiday">0</h3>
+
+            </div>
+
+            <div class="card">
+
+                <span>Late</span>
+
+                <h3 id="late">0</h3>
+
+            </div>
+
+            <div class="card">
+
+                <span>Attendance</span>
+
+                <h3 id="attendance">0%</h3>
+
+            </div>
+
+        </div>
+
+        <h3 class="history-title">
+
+            Recent Attendance
+
+        </h3>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Login</th>
+
+                        <th>Logout</th>
+
+                        <th>Hours</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                id="historyBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+
+</html>

@@ -1,92 +1,146 @@
-const scriptURL =
-'https://script.google.com/macros/s/AKfycbxKUF4oxXw0x5cjIXSuSghBV-6IQkCp84XrRTz4lMe4qVtJdTWR8HPcTsyF3tiHipYdeg/exec';
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzPxvg3FdtRaF3XWaQaK5TZskLtRcDzhxVIRjyAvNHyDJ24NKGc0_F0aWZo4YIkaRKm/exec";
 
-async function login(){
+// =====================================================
+// LOGIN
+// =====================================================
+
+async function login() {
 
     const employeeId =
-    document.getElementById('employeeId').value.trim();
+    document.getElementById("employeeId")
+    .value
+    .trim();
 
     const password =
-    document.getElementById('password').value.trim();
+    document.getElementById("password")
+    .value
+    .trim();
 
     const status =
-    document.getElementById('status');
+    document.getElementById("status");
 
-    const loginBtn =
-    document.getElementById('loginBtn');
+    const button =
+    document.getElementById("loginBtn");
 
-    if(!employeeId || !password){
+    status.innerHTML = "";
+
+    if (!employeeId) {
+
         status.innerHTML =
-        'Please enter Employee ID and Password';
+        "Employee ID is required.";
+
         return;
+
     }
 
-    loginBtn.disabled = true;
-    status.innerHTML = 'Checking...';
+    if (!password) {
 
-    const data = {
-        action:'login',
-        employeeId,
-        password
-    };
+        status.innerHTML =
+        "Password is required.";
 
-    try{
+        return;
 
-        const response = await fetch(scriptURL,{
-            method:'POST',
-            body:JSON.stringify(data)
+    }
+
+    button.disabled = true;
+    button.innerHTML = "Please Wait...";
+
+    try {
+
+        const response =
+        await fetch(SCRIPT_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                action: "login",
+
+                employeeId,
+
+                password
+
+            })
+
         });
 
         const result =
         await response.json();
 
-        status.innerHTML =
-        result.message || '';
+        if (result.status !== "success") {
 
-        /*
-        success = first login today
-        already_logged_in = login exists,
-                            logout not done yet
-        */
+            status.innerHTML =
+            result.message;
 
-        if(
-            result.status === 'success' ||
-            result.status === 'already_logged_in'
-        ){
+            button.disabled = false;
+            button.innerHTML = "Login";
 
-            localStorage.setItem(
-                'employeeId',
-                employeeId
-            );
-
-            localStorage.setItem(
-                'employeeName',
-                result.name
-            );
-
-            localStorage.setItem(
-                'employeePassword',
-                password
-            );
-
-            window.location.href =
-            'dashboard.html';
-
-        }else{
-
-            loginBtn.disabled = false;
+            return;
 
         }
 
-    }catch(error){
+        localStorage.setItem(
+            "token",
+            result.token
+        );
+
+        localStorage.setItem(
+            "employeeId",
+            result.employee.id
+        );
+
+        localStorage.setItem(
+            "employeeName",
+            result.employee.name
+        );
+
+        localStorage.setItem(
+            "employeeDepartment",
+            result.employee.department
+        );
+
+        localStorage.setItem(
+            "employeeDesignation",
+            result.employee.designation
+        );
+
+        localStorage.setItem(
+            "employeeRole",
+            result.employee.role
+        );
+
+        window.location.href =
+        "dashboard.html";
+
+    }
+
+    catch (error) {
 
         console.error(error);
 
         status.innerHTML =
-        'Connection Error';
+        "Unable to connect to server.";
 
-        loginBtn.disabled = false;
+        button.disabled = false;
+        button.innerHTML = "Login";
 
     }
 
 }
+
+document
+.getElementById("password")
+.addEventListener("keypress", function(e){
+
+    if(e.key==="Enter"){
+
+        login();
+
+    }
+
+});
